@@ -5,10 +5,10 @@ import kotlin.test.assertEquals
 class AxialCoordinateTests {
     @Test
     fun `Roundtrip conversion from axial to cube coordinates should return the same coordinate`(){
-        var axialCoordinate = AxialCoordinate(1,2)
+        val axialCoordinate = AxialCoordinate(1,2)
 
-        var convertedCube = toCube(axialCoordinate)
-        var convertedAxial = fromCube(convertedCube)
+        val convertedCube = toCube(axialCoordinate)
+        val convertedAxial = fromCube(convertedCube)
 
         assertEquals(axialCoordinate, convertedAxial)
     }

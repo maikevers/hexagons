@@ -11,17 +11,16 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     jcenter()
+    maven { setUrl("https://dl.bintray.com/arrow-kt/arrow-kt/") }
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("test"))
     implementation(kotlin("test-junit"))
-    implementation(arrow("typeclasses"))
-    implementation(arrow("extras-data"))
     implementation(arrow("syntax"))
-    implementation(arrow("extras-extensions"))
-    implementation(arrow("core-extensions"))
+    implementation(arrow("meta"))
+    implementation(arrow("core"))
 
     testImplementation(arrow("test")) {
         exclude(module = "kotlin-reflect")
@@ -31,8 +30,7 @@ dependencies {
     kapt(arrow("meta"))
 }
 
-fun DependencyHandler.arrow(module: String, version: String = "0.9.0"): String =
-    "io.arrow-kt:arrow-$module:$version"
+fun arrow(module: String, version: String = "0.10.4"): String = "io.arrow-kt:arrow-$module:$version"
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
