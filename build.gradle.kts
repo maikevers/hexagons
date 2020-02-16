@@ -17,7 +17,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("test"))
-    implementation(kotlin("test-junit"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
     implementation(arrow("syntax"))
     implementation(arrow("meta"))
     implementation(arrow("core"))
@@ -40,6 +40,10 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
@@ -47,4 +51,5 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
+
 }

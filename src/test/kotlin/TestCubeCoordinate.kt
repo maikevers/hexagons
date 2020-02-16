@@ -1,9 +1,13 @@
-import org.junit.Test
-import kotlin.test.assertEquals
-import arrow.core.*
-import hexagons.*
+import arrow.core.None
+import arrow.core.Some
 import arrow.syntax.function.partially1
-import kotlin.test.assertTrue
+import hexagons.*
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
+import kotlin.test.assertEquals
 
 class CubeCoordinateTests {
     @Test
@@ -39,4 +43,19 @@ class CubeCoordinateTests {
 
         assertTrue(multiplied is Some)
     }
+
+    @TestFactory
+    fun `Moving in one direction and then in opposing direction should return to start coordinate`() : Collection<DynamicTest> =
+        listOf(
+            NorthEast to SouthWest,
+            East to West,
+            SouthEast to NorthWest
+        ).map {
+            dynamicTest("Moving ${it.first} and then ${it.second} should return to start coordinate") {
+                val startCoordinate = createCubeCoordinate(0, 0)
+                val movedThereAndBack = neighbor(neighbor(startCoordinate, it.first), it.second)
+                assertEquals(startCoordinate, movedThereAndBack)
+            }
+        }
+
 }
