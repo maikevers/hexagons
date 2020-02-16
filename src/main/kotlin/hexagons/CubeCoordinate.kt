@@ -11,23 +11,19 @@ interface CubeCoordinate {
     val s: Int
 }
 
-val toAxial = { cubeCoordinate: CubeCoordinate -> AxialCoordinate(cubeCoordinate.q, cubeCoordinate.r) }
+fun toAxial(cubeCoordinate: CubeCoordinate): AxialCoordinate = AxialCoordinate(cubeCoordinate.q, cubeCoordinate.r)
 
-val createCubeCoordinate: (Int, Int, Int) -> Option<CubeCoordinate> =
-    { q, r, s -> (q + r + s == 0).maybe { CubeCoordinateInstance(q, r, s) } }
+fun createCubeCoordinate(q: Int, r: Int, s: Int): Option<CubeCoordinate> =
+    (q + r + s == 0).maybe { CubeCoordinateInstance(q, r, s) }
 
-var fromAxial: (AxialCoordinate) -> CubeCoordinate =
-    { axial -> CubeCoordinateInstance(axial.q, axial.r, -axial.q - axial.r) }
+fun fromAxial(axial: AxialCoordinate): CubeCoordinate = CubeCoordinateInstance(axial.q, axial.r, -axial.q - axial.r)
 
-var createFromAxial: (Int, Int) -> CubeCoordinate ={
-    q, r -> CubeCoordinateInstance(q,r,-q-r)
-}
+fun fromAxial(q: Int, r: Int): CubeCoordinate = CubeCoordinateInstance(q, r, -q - r)
 
-val add: (CubeCoordinate, CubeCoordinate) -> CubeCoordinate =
-    { a, b -> CubeCoordinateInstance(a.q + b.q, a.r + b.r, a.s + b.s) }
+fun add(a: CubeCoordinate, b: CubeCoordinate): CubeCoordinate = CubeCoordinateInstance(a.q + b.q, a.r + b.r, a.s + b.s)
 
-val subtract: (CubeCoordinate, CubeCoordinate) -> CubeCoordinate =
-    { a, b -> CubeCoordinateInstance(a.q - b.q, a.r - b.r, a.s - b.s) }
+fun subtract(a: CubeCoordinate, b: CubeCoordinate): CubeCoordinate =
+    CubeCoordinateInstance(a.q - b.q, a.r - b.r, a.s - b.s)
 
-val multiply: (CubeCoordinate, CubeCoordinate) -> CubeCoordinate =
-    { a, b -> CubeCoordinateInstance(a.q * b.q, a.r * b.r, a.s * b.s) }
+fun multiply (a: CubeCoordinate, b: CubeCoordinate): CubeCoordinate =
+    CubeCoordinateInstance(a.q * b.q, a.r * b.r, a.s * b.s)

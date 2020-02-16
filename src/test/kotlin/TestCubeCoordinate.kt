@@ -2,6 +2,8 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import arrow.core.*
 import hexagons.*
+import arrow.syntax.function.partially1
+import kotlin.test.assertTrue
 
 class CubeCoordinateTests {
     @Test
@@ -20,18 +22,21 @@ class CubeCoordinateTests {
     fun `Roundtrip conversion from cube to axial coordinates should return the same coordinate`() {
         val cubeCoordinate = createCubeCoordinate(1, 1, -2)
 
-        val convertedAxial = cubeCoordinate.map(toAxial)
-        val convertedCube = convertedAxial.map(fromAxial)
+        val convertedAxial = cubeCoordinate.map { toAxial(it) }
+        val convertedCube = convertedAxial.map { fromAxial(it) }
 
         assertEquals(cubeCoordinate, convertedCube)
     }
 
     @Test
     fun `Multiplication by 0 should return 0`() {
-        val cubeCoordinate = createFromAxial(1, 2)
-        val multiplier = createCubeCoordinate(0, 0, 0).getOrElse { throw Exception() }
+        val cubeCoordinate = createCubeCoordinate(1, 2, -3)
+        val multiplier = createCubeCoordinate(0, 0, 0)
 
-        var multiplied = multiply(cubeCoordinate, multiplier)
-        assertEquals(multiplier, multiplied)
+        val multiplied = multiplier
+            .map { multi -> ::multiply.partially1(multi) }
+            .map { partial -> cubeCoordinate.map { cube -> partial(cube) } }
+
+        assertTrue(multiplied is Some)
     }
 }

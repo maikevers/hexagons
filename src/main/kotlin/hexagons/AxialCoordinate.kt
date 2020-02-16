@@ -2,6 +2,6 @@ package hexagons
 
 data class AxialCoordinate(val q: Int, val r: Int)
 
-val toCube = fromAxial
+fun toCube(axial: AxialCoordinate): CubeCoordinate = fromAxial(axial)
 
-val fromCube = toAxial
+fun fromCube(cubeCoordinate: CubeCoordinate): AxialCoordinate = toAxial(cubeCoordinate)
