@@ -34,9 +34,6 @@ fun multiply(a: CubeCoordinate, b: CubeCoordinate): CubeCoordinate =
 fun scale(cubeCoordinate: CubeCoordinate, factor: Int): CubeCoordinate =
     CubeCoordinateInstance(cubeCoordinate.q * factor, cubeCoordinate.r * factor, cubeCoordinate.s * factor)
 
-fun toSideCoordinate(cubeCoordinate: CubeCoordinate, direction: SideDirection): SideCoordinate =
-    SideCoordinate(cubeCoordinate, neighbor(cubeCoordinate, direction))
-
 fun fromSideDirection(direction: SideDirection): CubeCoordinate = when (direction) {
     is SideDirection.NorthEast -> CubeCoordinateInstance(1, 0, -1)
     is SideDirection.East -> CubeCoordinateInstance(1, -1, 0)

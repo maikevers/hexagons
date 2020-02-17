@@ -47,7 +47,7 @@ sealed class CornerDirection {
     }
 }
 
-fun fromCubeCoordinate(cubeCoordinate: CubeCoordinate): Option<SideDirection> =
+fun fromCubeCoordinates(cubeCoordinate: CubeCoordinate): Option<SideDirection> =
     allDirections().toList().singleOrNone { t -> t.second == cubeCoordinate }.map { t -> t.first }
 
 fun sideDirections() = SideDirection::class.nestedClasses.map { it.objectInstance as SideDirection }

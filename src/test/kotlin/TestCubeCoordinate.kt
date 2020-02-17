@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import kotlin.test.assertEquals
 
-class CubeCoordinateTests {
+class TestCubeCoordinate {
     @Test
     fun `Creating CubeCoordinate with coordinates that don't sum to zero should return none`() {
         val cubeCoordinate = createCubeCoordinate(1, 1, 1)
@@ -74,7 +74,7 @@ class CubeCoordinateTests {
     fun `Conversion of sideDirection to cube coordinate and back yields same sideDirection`() : Collection<DynamicTest> =
         sideDirections().map {
             dynamicTest("Converting $it to cube coordinate and back should yield $it") {
-                val convertedThereAndBack = fromCubeCoordinate(fromSideDirection(it))
+                val convertedThereAndBack = fromCubeCoordinates(fromSideDirection(it))
                 assertTrue(convertedThereAndBack.isDefined())
                 assert(convertedThereAndBack.getOrElse { throw Exception() } == it)
             }

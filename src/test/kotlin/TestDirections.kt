@@ -2,7 +2,7 @@ import hexagons.*
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class DirectionTests {
+class TestDirections {
     @Test
     fun `There are six side directions`(){
         assertEquals(6, sideDirections().count())
