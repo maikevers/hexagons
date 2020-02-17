@@ -43,9 +43,9 @@ fun fromSideDirection(direction: SideDirection): CubeCoordinate = when (directio
     is SideDirection.NorthWest -> CubeCoordinateInstance(0, 1, -1)
 }
 
-fun numberOfNeighboursInRange(steps: Int): Int = 6*steps
+fun numberOfNeighborsInRange(steps: Int): Int = 6*steps
 
-fun neighbourHoodSize(steps: Int): Int = numberOfNeighboursInRange(steps)+1
+fun neighborHoodSize(steps: Int): Int = numberOfNeighborsInRange(steps)+1
 
 fun sidesOf(cubeCoordinate: CubeCoordinate): Set<SideCoordinate> =
     sideDirections().map { fromCubeAndDirection(cubeCoordinate, it) }.toSet()
@@ -53,16 +53,16 @@ fun sidesOf(cubeCoordinate: CubeCoordinate): Set<SideCoordinate> =
 fun cornersOf(cubeCoordinate: CubeCoordinate): Set<CornerCoordinate> =
     cornerDirections().map { fromCubeAndDirection(cubeCoordinate, it) }.toSet()
 
-fun neighboursOf(cubeCoordinate: CubeCoordinate): Set<CubeCoordinate> =
-    sideDirections().map { neighbor(cubeCoordinate, it) }.toSet()
+fun neighborsOf(cubeCoordinate: CubeCoordinate): Set<CubeCoordinate> =
+    sideDirections().map { neighborOf(cubeCoordinate, it) }.toSet()
 
-fun neighbourhoodOf(cubeCoordinate: CubeCoordinate, steps: Int): Set<CubeCoordinate> =
+fun neighborhoodOf(cubeCoordinate: CubeCoordinate, steps: Int): Set<CubeCoordinate> =
     (0..steps).map { step -> sideDirections().map { move(cubeCoordinate, it, step) } }.flatten().toSet()
 
 fun sideDirectionToCubeMap(): Map<SideDirection, CubeCoordinate> =
     sideDirections().associateBy({ it }, { fromSideDirection(it) })
 
-fun areNeighbours(someCube: CubeCoordinate, otherCube: CubeCoordinate): Boolean =
+fun areNeighbors(someCube: CubeCoordinate, otherCube: CubeCoordinate): Boolean =
     distanceBetween(someCube, otherCube) == 1
 
 fun distanceBetween(a: CubeCoordinate, b: CubeCoordinate): Int = lengthOf(subtract(a, b))
@@ -73,5 +73,5 @@ fun lengthOf(cubeCoordinate: CubeCoordinate): Int =
 fun move(cubeCoordinate: CubeCoordinate, direction: SideDirection, steps: Int): CubeCoordinate =
     add(cubeCoordinate, scale(fromSideDirection(direction), steps))
 
-fun neighbor(cubeCoordinate: CubeCoordinate, direction: SideDirection): CubeCoordinate =
+fun neighborOf(cubeCoordinate: CubeCoordinate, direction: SideDirection): CubeCoordinate =
     move(cubeCoordinate, direction, 1)

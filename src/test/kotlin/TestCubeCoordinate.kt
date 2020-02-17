@@ -36,7 +36,7 @@ class TestCubeCoordinate {
     @Test
     fun `A hexagon has six neighbours`() {
         val cubeCoordinate = fromAxial(0, 0)
-        val neighbors = neighboursOf(cubeCoordinate)
+        val neighbors = neighborsOf(cubeCoordinate)
         assertEquals(6, neighbors.count())
     }
 
@@ -52,8 +52,18 @@ class TestCubeCoordinate {
         assertTrue(multiplied is Some)
     }
 
+    @Test
+    fun `Move by 1 should return neighbor`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val neighbor = neighborOf(cubeCoordinate, SideDirection.East)
+
+        val moved = move(cubeCoordinate, SideDirection.East, 1)
+
+        assertEquals(neighbor, moved)
+    }
+
     @TestFactory
-    fun `Moving in one direction and then in opposing direction should return to start coordinate`() : Collection<DynamicTest> =
+    fun `Moving in one direction and then in opposing direction should return to start coordinate`(): Collection<DynamicTest> =
         listOf(
             SideDirection.NorthEast to SideDirection.SouthWest,
             SideDirection.East to SideDirection.West,
@@ -61,31 +71,31 @@ class TestCubeCoordinate {
         ).map {
             dynamicTest("Moving ${it.first} and then ${it.second} should return to start coordinate") {
                 val startCoordinate = createCubeCoordinate(0, 0)
-                val movedThereAndBack = neighbor(neighbor(startCoordinate, it.first), it.second)
+                val movedThereAndBack = neighborOf(neighborOf(startCoordinate, it.first), it.second)
                 assertEquals(startCoordinate, movedThereAndBack)
             }
         }
 
     @TestFactory
-    fun `Neighbours should be neighbours`() : Collection<DynamicTest> =
+    fun `Neighbours should be neighbours`(): Collection<DynamicTest> =
         sideDirections().map {
             dynamicTest("Neighbour in direction $it should be neighbour") {
-                val startCubeCoordinate = fromAxial(0,0)
-                val neighbour = neighbor(startCubeCoordinate, it)
-                val areNeighbours = areNeighbours(startCubeCoordinate, neighbour)
+                val startCubeCoordinate = fromAxial(0, 0)
+                val neighbour = neighborOf(startCubeCoordinate, it)
+                val areNeighbours = areNeighbors(startCubeCoordinate, neighbour)
                 assertTrue(areNeighbours)
             }
         }
 
     @TestFactory
-    fun `Directions should yield expected cube coordinates`() : Collection<DynamicTest> =
+    fun `Directions should yield expected cube coordinates`(): Collection<DynamicTest> =
         listOf(
-            SideDirection.NorthEast to fromAxial(1,0),
-            SideDirection.East to fromAxial(1,-1),
-            SideDirection.SouthEast to fromAxial(0,-1),
-            SideDirection.SouthWest to fromAxial(-1,0),
-            SideDirection.West to fromAxial(-1,1),
-            SideDirection.NorthWest to fromAxial(0,1)
+            SideDirection.NorthEast to fromAxial(1, 0),
+            SideDirection.East to fromAxial(1, -1),
+            SideDirection.SouthEast to fromAxial(0, -1),
+            SideDirection.SouthWest to fromAxial(-1, 0),
+            SideDirection.West to fromAxial(-1, 1),
+            SideDirection.NorthWest to fromAxial(0, 1)
         ).map {
             dynamicTest("Direction ${it.first} should be ${it.second}") {
                 val cubeFromSideDirection = fromSideDirection(it.first)
@@ -94,7 +104,7 @@ class TestCubeCoordinate {
         }
 
     @TestFactory
-    fun `Conversion of sideDirection to cube coordinate and back yields same sideDirection`() : Collection<DynamicTest> =
+    fun `Conversion of sideDirection to cube coordinate and back yields same sideDirection`(): Collection<DynamicTest> =
         sideDirections().map {
             dynamicTest("Converting $it to cube coordinate and back should yield $it") {
                 val convertedThereAndBack = fromCubeCoordinates(fromSideDirection(it))
@@ -104,11 +114,11 @@ class TestCubeCoordinate {
         }
 
     @TestFactory
-    fun `Neighbourhood should be expected size`() : Collection<DynamicTest> =
-        (0..3).associateBy({it}, {neighbourHoodSize(it)}).map {
+    fun `Neighbourhood should be expected size`(): Collection<DynamicTest> =
+        (0..3).associateBy({ it }, { neighborHoodSize(it) }).map {
             dynamicTest("Neighbourhood of ${it.key} steps should be of size ${it.value}") {
-                val cubeCoordinate = fromAxial(0,0)
-                val neighbourhood = neighbourhoodOf(cubeCoordinate, it.key)
+                val cubeCoordinate = fromAxial(0, 0)
+                val neighbourhood = neighborhoodOf(cubeCoordinate, it.key)
                 assertEquals(it.value, neighbourhood.count())
             }
         }

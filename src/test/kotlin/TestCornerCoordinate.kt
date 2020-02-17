@@ -8,11 +8,21 @@ import kotlin.test.assertEquals
 
 class TestCornerCoordinate {
     @Test
-    fun `Corner coordinate equality should not care about order of constructor parameters`(){
-        var cubeCoordinate = fromAxial(0,0)
-        var corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
-        var cornerWithReverseConstructorParameters = fromCubeCoordinates(corner.c, corner.b, corner.a).getOrElse { throw Exception() }
+    fun `Corner coordinate equality should not care about order of constructor parameters`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        val cornerWithReverseConstructorParameters =
+            fromCubeCoordinates(corner.c, corner.b, corner.a).getOrElse { throw Exception() }
         assertEquals(corner, cornerWithReverseConstructorParameters)
+    }
+
+    @Test
+    fun `Corner coordinate hashcode should not care about order of constructor parameters`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        val cornerWithReverseConstructorParameters =
+            fromCubeCoordinates(corner.c, corner.b, corner.a).getOrElse { throw Exception() }
+        assertEquals(corner.hashCode(), cornerWithReverseConstructorParameters.hashCode())
     }
 
     @Test
@@ -22,56 +32,97 @@ class TestCornerCoordinate {
         assertEquals(6, corners.count())
     }
 
+    @Test
+    fun `Corners have 3 neighboring corners`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        val neighbours = neighborsOf(corner)
+        assertEquals(3, neighbours.count())
+    }
+
+    @Test
+    fun `Sides have 2 corners`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val side = fromCubeAndDirection(cubeCoordinate, SideDirection.West)
+        val corners = cornersOf(side)
+        assertEquals(2, corners.count())
+    }
+
+    @Test
+    fun `Neighboring corners of south corner should contain southwest and southeast corners`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val southCorner = fromCubeAndDirection(cubeCoordinate, CornerDirection.South)
+        val neighbours = neighborsOf(southCorner)
+        val expectedNeighborsToContain = setOf(
+            fromCubeAndDirection(cubeCoordinate, CornerDirection.SouthWest),
+            fromCubeAndDirection(cubeCoordinate, CornerDirection.SouthEast)
+        )
+        assert(neighbours.containsAll(expectedNeighborsToContain))
+    }
+
     @TestFactory
-    fun `Converting corner coordinate to sides and back should yield same corner coordinate`() : Collection<DynamicTest> =
+    fun `Converting corner coordinate to sides and back should yield same corner coordinate`(): Collection<DynamicTest> =
         cornerDirections().map {
             DynamicTest.dynamicTest("Converting $it to side coordinates and back should yield $it") {
-                var corner = fromCubeAndDirection(fromAxial(0,0), it)
-                var sides = toSides(corner).toList()
-                var cornerConvertedThereAndBack = fromSideCoordinates(sides[0], sides[1], sides[2]).getOrElse { throw Exception() }
+                val corner = fromCubeAndDirection(fromAxial(0, 0), it)
+                val sides = sidesOf(corner).toList()
+                val cornerConvertedThereAndBack =
+                    fromSideCoordinates(sides[0], sides[1], sides[2]).getOrElse { throw Exception() }
                 assertEquals(corner, cornerConvertedThereAndBack)
             }
         }
 
     @Test
-    fun `Invalid corner should be none`(){
-        var a = fromAxial(0,0)
-        var b = neighbor(a, SideDirection.East)
-        var c = neighbor(a, SideDirection.West)
-        var invalidCorner = fromCubeCoordinates(a,b,c)
+    fun `Invalid corner should be none`() {
+        val a = fromAxial(0, 0)
+        val b = neighborOf(a, SideDirection.East)
+        val c = neighborOf(a, SideDirection.West)
+        val invalidCorner = fromCubeCoordinates(a, b, c)
         assertEquals(None, invalidCorner)
     }
 
     @Test
-    fun `Corner coordinate sides should be corner`(){
-        var cubeCoordinate = fromAxial(0,0)
-        var corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
-        var sides = toSides(corner).toList()
+    fun `Corner coordinate sides should be corner`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        val sides = sidesOf(corner).toList()
         assert(areCorner(sides[0], sides[1], sides[2]))
     }
 
     @Test
-    fun `Corner of two sides of a corner should be the same corner`(){
-        var cubeCoordinate = fromAxial(0,0)
-        var corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
-        var sides = toSides(corner).toList()
-        var cornerOfSides = fromSideCoordinates(sides[0], sides[1]).getOrElse { throw Exception() }
+    fun `Corner of two sides of a corner should be the same corner`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        val sides = sidesOf(corner).toList()
+        val cornerOfSides = fromSideCoordinates(sides[0], sides[1]).getOrElse { throw Exception() }
         assertEquals(corner, cornerOfSides)
     }
 
     @Test
-    fun `Corner coordinate sides are connected`() {
-        var cubeCoordinate = fromAxial(0, 0)
-        var corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
-        var sides = toSides(corner).toList()
-        var sideA = sides[0]
-        var sideB = sides[1]
-        var sideC = sides[2]
+    fun `Corner coordinate sides should be connected to each other`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        val sides = sidesOf(corner).toList()
+        val sideA = sides[0]
+        val sideB = sides[1]
+        val sideC = sides[2]
 
-        var areConnectedAB = areConnected(sideA, sideB)
-        var areConnectedAC = areConnected(sideA, sideC)
-        var areConnectedBC = areConnected(sideB, sideC)
+        val areConnectedAB = areConnected(sideA, sideB)
+        val areConnectedAC = areConnected(sideA, sideC)
+        val areConnectedBC = areConnected(sideB, sideC)
 
         assert(areConnectedAB && areConnectedAC && areConnectedBC)
+    }
+
+    @Test
+    fun `Next corners of south corner comming from southeast should include southwest corner`() {
+        val cubeCoordinate = fromAxial(0,0)
+        val southCorner = fromCubeAndDirection(cubeCoordinate, CornerDirection.South)
+        val southWestCorner = fromCubeAndDirection(cubeCoordinate, CornerDirection.SouthWest)
+        val southEastSide = fromCubeAndDirection(cubeCoordinate, SideDirection.SouthEast)
+
+        val nextCorners = nextCorners(southCorner, southEastSide)
+
+        assert(nextCorners.contains(southWestCorner))
     }
 }

@@ -14,6 +14,14 @@ class TestSideCoordinate {
         assertEquals(side, sideWithReverseConstructorParameters)
     }
 
+    @Test
+    fun `Side coordinate hashcode should not care about order of constructor parameters`() {
+        val cubeCoordinateA = fromAxial(0, 0)
+        val side = fromCubeAndDirection(cubeCoordinateA, SideDirection.SouthWest)
+        val sideWithReverseConstructorParameters = fromCubeCoordinates(side.n, side.m).getOrElse { throw Exception() }
+        assertEquals(side.hashCode(), sideWithReverseConstructorParameters.hashCode())
+    }
+
     @TestFactory
     fun `Opposing sides of cube coordinate should share that cube coordinate`(): Collection<DynamicTest> =
         sideDirections().map {

@@ -12,13 +12,14 @@ interface SideCoordinate {
 data class SideCoordinateInstance(override val m: CubeCoordinate, override val n: CubeCoordinate) : SideCoordinate {
     override fun equals(other: Any?) = (other is SideCoordinate)
             && setOf(m, n) == setOf(other.m, other.n)
+    override fun hashCode() = setOf(m,n).hashCode()
 }
 
 fun fromCubeCoordinates(m: CubeCoordinate, n: CubeCoordinate): Option<SideCoordinate> =
-    areNeighbours(m, n).maybe { SideCoordinateInstance(m, n) }
+    areNeighbors(m, n).maybe { SideCoordinateInstance(m, n) }
 
 fun fromCubeAndDirection(cubeCoordinate: CubeCoordinate, direction: SideDirection): SideCoordinate =
-    SideCoordinateInstance(cubeCoordinate, neighbor(cubeCoordinate, direction))
+    SideCoordinateInstance(cubeCoordinate, neighborOf(cubeCoordinate, direction))
 
 fun fromCorner(corner: CornerCoordinate): Set<SideCoordinate> = setOf(
     SideCoordinateInstance(corner.a, corner.b),
@@ -26,13 +27,13 @@ fun fromCorner(corner: CornerCoordinate): Set<SideCoordinate> = setOf(
     SideCoordinateInstance(corner.b, corner.c)
 )
 
-fun toSetOfCubeCoordinates(side: SideCoordinate): Set<CubeCoordinate> = setOf(side.m, side.n)
+fun cubeCoordinatesOf(side: SideCoordinate): Set<CubeCoordinate> = setOf(side.m, side.n)
 
 fun distinctCoordinatesOf(a: SideCoordinate, b: SideCoordinate): Set<CubeCoordinate> =
     distinctCoordinatesOf(listOf(a, b))
 
 fun distinctCoordinatesOf(sides: Collection<SideCoordinate>): Set<CubeCoordinate> =
-    sides.map { side -> toSetOfCubeCoordinates(side) }.flatten().toSet()
+    sides.map { side -> cubeCoordinatesOf(side) }.flatten().toSet()
 
 fun coordinatesOf(a: SideCoordinate, b: SideCoordinate): List<CubeCoordinate> = listOf(a.m, a.n, b.m, b.n)
 
