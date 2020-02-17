@@ -1,7 +1,7 @@
 package hexagons
 
 import arrow.core.Option
-import arrow.core.singleOrNone
+import arrow.core.getOption
 
 sealed class SideDirection {
     object NorthEast : SideDirection()
@@ -47,7 +47,7 @@ sealed class CornerDirection {
     }
 }
 
-fun oppositeOf(direction: SideDirection): SideDirection = when(direction){
+fun oppositeOf(direction: SideDirection): SideDirection = when (direction) {
     is SideDirection.NorthEast -> SideDirection.SouthWest
     is SideDirection.East -> SideDirection.West
     is SideDirection.SouthEast -> SideDirection.NorthWest
@@ -56,7 +56,7 @@ fun oppositeOf(direction: SideDirection): SideDirection = when(direction){
     is SideDirection.NorthWest -> SideDirection.SouthEast
 }
 
-fun oppositeOf(direction: CornerDirection): CornerDirection = when(direction){
+fun oppositeOf(direction: CornerDirection): CornerDirection = when (direction) {
     is CornerDirection.NorthEast -> CornerDirection.SouthWest
     is CornerDirection.North -> CornerDirection.South
     is CornerDirection.SouthEast -> CornerDirection.NorthWest
@@ -65,9 +65,12 @@ fun oppositeOf(direction: CornerDirection): CornerDirection = when(direction){
     is CornerDirection.NorthWest -> CornerDirection.SouthEast
 }
 
-fun fromCubeCoordinates(cubeCoordinate: CubeCoordinate): Option<SideDirection> =
-    sideDirectionToCubeMap().toList().singleOrNone { t -> t.second == cubeCoordinate }.map { t -> t.first }
+fun fromCubeCoordinate(cubeCoordinate: CubeCoordinate): Option<SideDirection> =
+    cubeCoordinateToSideDirectionMap().getOption(cubeCoordinate)
 
-fun sideDirections() = SideDirection::class.nestedClasses.map { it.objectInstance as SideDirection }
+fun sideDirections() = nestedClassesOf<SideDirection>()
 
-fun cornerDirections() = CornerDirection::class.nestedClasses.map { it.objectInstance as CornerDirection }
+fun cornerDirections() = nestedClassesOf<CornerDirection>()
+
+private inline fun <reified T> nestedClassesOf(): Set<T> = T::class.nestedClasses.map { it.objectInstance as T }.toSet()
+

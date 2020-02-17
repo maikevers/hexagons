@@ -1,5 +1,6 @@
 import arrow.core.None
 import arrow.core.Some
+import arrow.core.getOption
 import arrow.core.getOrElse
 import arrow.syntax.function.partially1
 import hexagons.*
@@ -107,7 +108,7 @@ class TestCubeCoordinate {
     fun `Conversion of sideDirection to cube coordinate and back yields same sideDirection`(): Collection<DynamicTest> =
         sideDirections().map {
             dynamicTest("Converting $it to cube coordinate and back should yield $it") {
-                val convertedThereAndBack = fromCubeCoordinates(fromSideDirection(it))
+                val convertedThereAndBack = fromCubeCoordinate(fromSideDirection(it))
                 assertTrue(convertedThereAndBack.isDefined())
                 assertEquals(it, convertedThereAndBack.getOrElse { throw Exception() })
             }

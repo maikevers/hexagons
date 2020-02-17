@@ -62,6 +62,9 @@ fun neighborhoodOf(cubeCoordinate: CubeCoordinate, steps: Int): Set<CubeCoordina
 fun sideDirectionToCubeMap(): Map<SideDirection, CubeCoordinate> =
     sideDirections().associateBy({ it }, { fromSideDirection(it) })
 
+fun cubeCoordinateToSideDirectionMap(): Map<CubeCoordinate, SideDirection> =
+    sideDirections().associateBy({ fromSideDirection(it) }, { it })
+
 fun areNeighbors(someCube: CubeCoordinate, otherCube: CubeCoordinate): Boolean =
     distanceBetween(someCube, otherCube) == 1
 

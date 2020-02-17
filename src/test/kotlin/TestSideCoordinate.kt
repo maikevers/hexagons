@@ -1,3 +1,4 @@
+import arrow.core.getOption
 import arrow.core.getOrElse
 import hexagons.*
 import org.junit.jupiter.api.DynamicTest
@@ -40,4 +41,14 @@ class TestSideCoordinate {
         val sides = sidesOf(cubeCoordinate)
         assertEquals(6, sides.count())
     }
+
+    @TestFactory
+    fun `Mapping SideDirection to cubeCoordinate and back should yield same side coordinate`(): Collection<DynamicTest> =
+        sideDirections().map {
+            DynamicTest.dynamicTest("Map $it to cube coordinate and back yields same side") {
+                val mappedToCube = sideDirectionToCubeMap().getOption(it)
+                val mappedBack = mappedToCube.flatMap { m -> cubeCoordinateToSideDirectionMap().getOption(m) }
+                assertEquals(it, mappedBack.getOrElse { throw Exception() })
+            }
+        }
 }
