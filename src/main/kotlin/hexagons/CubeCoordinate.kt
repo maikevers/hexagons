@@ -43,6 +43,10 @@ fun fromSideDirection(direction: SideDirection): CubeCoordinate = when (directio
     is SideDirection.NorthWest -> CubeCoordinateInstance(0, 1, -1)
 }
 
+fun numberOfNeighboursInRange(steps: Int): Int = 6*steps
+
+fun neighbourHoodSize(steps: Int): Int = numberOfNeighboursInRange(steps)+1
+
 fun sidesOf(cubeCoordinate: CubeCoordinate): Set<SideCoordinate> =
     sideDirections().map { fromCubeAndDirection(cubeCoordinate, it) }.toSet()
 
@@ -50,7 +54,10 @@ fun cornersOf(cubeCoordinate: CubeCoordinate): Set<CornerCoordinate> =
     cornerDirections().map { fromCubeAndDirection(cubeCoordinate, it) }.toSet()
 
 fun neighboursOf(cubeCoordinate: CubeCoordinate): Set<CubeCoordinate> =
-    sideDirections().map { neighbor(cubeCoordinate, it)}.toSet()
+    sideDirections().map { neighbor(cubeCoordinate, it) }.toSet()
+
+fun neighbourhoodOf(cubeCoordinate: CubeCoordinate, steps: Int): Set<CubeCoordinate> =
+    (0..steps).map { step -> sideDirections().map { move(cubeCoordinate, it, step) } }.flatten().toSet()
 
 fun sideDirectionToCubeMap(): Map<SideDirection, CubeCoordinate> =
     sideDirections().associateBy({ it }, { fromSideDirection(it) })

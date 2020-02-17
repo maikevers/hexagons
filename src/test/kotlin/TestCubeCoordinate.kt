@@ -102,4 +102,14 @@ class TestCubeCoordinate {
                 assert(convertedThereAndBack.getOrElse { throw Exception() } == it)
             }
         }
+
+    @TestFactory
+    fun `Neighbourhood should be expected size`() : Collection<DynamicTest> =
+        (0..3).associateBy({it}, {neighbourHoodSize(it)}).map {
+            dynamicTest("Neighbourhood of ${it.key} steps should be of size ${it.value}") {
+                val cubeCoordinate = fromAxial(0,0)
+                val neighbourhood = neighbourhoodOf(cubeCoordinate, it.key)
+                assertEquals(it.value, neighbourhood.count())
+            }
+        }
 }
