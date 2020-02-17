@@ -1,5 +1,8 @@
 package hexagons
 
+import arrow.core.Option
+import arrow.core.maybe
+
 interface CornerCoordinate {
     val a: CubeCoordinate
     val b: CubeCoordinate
@@ -19,6 +22,5 @@ fun fromCubeAndCornerDirection(cubeCoordinate: CubeCoordinate, cornerDirection: 
         neighbor(cubeCoordinate, cornerDirection.otherSide)
     )
 
-fun fromCube(a: CubeCoordinate, b: CubeCoordinate, c: CubeCoordinate){
-
-}
+fun fromCubeCoordinate(a: CubeCoordinate, b: CubeCoordinate, c: CubeCoordinate): Option<CornerCoordinate> =
+    (areNeighbours(a, b) && areNeighbours(a, c) && areNeighbours(b, c)).maybe { CornerCoordinateInstance(a, b, c) }
