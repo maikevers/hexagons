@@ -99,7 +99,7 @@ class TestCubeCoordinate {
             dynamicTest("Converting $it to cube coordinate and back should yield $it") {
                 val convertedThereAndBack = fromCubeCoordinates(fromSideDirection(it))
                 assertTrue(convertedThereAndBack.isDefined())
-                assert(convertedThereAndBack.getOrElse { throw Exception() } == it)
+                assertEquals(it, convertedThereAndBack.getOrElse { throw Exception() })
             }
         }
 
