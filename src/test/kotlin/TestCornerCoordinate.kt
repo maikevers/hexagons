@@ -15,6 +15,13 @@ class TestCornerCoordinate {
         assertEquals(corner, cornerWithReverseConstructorParameters)
     }
 
+    @Test
+    fun `A hexagon has six corners`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val corners = cornersOf(cubeCoordinate)
+        assertEquals(6, corners.count())
+    }
+
     @TestFactory
     fun `Converting corner coordinate to sides and back should yield same corner coordinate`() : Collection<DynamicTest> =
         cornerDirections().map {
@@ -41,6 +48,15 @@ class TestCornerCoordinate {
         var corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
         var sides = toSides(corner).toList()
         assert(areCorner(sides[0], sides[1], sides[2]))
+    }
+
+    @Test
+    fun `Corner of two sides of a corner should be the same corner`(){
+        var cubeCoordinate = fromAxial(0,0)
+        var corner = fromCubeAndDirection(cubeCoordinate, CornerDirection.North)
+        var sides = toSides(corner).toList()
+        var cornerOfSides = fromSideCoordinates(sides[0], sides[1]).getOrElse { throw Exception() }
+        assertEquals(corner, cornerOfSides)
     }
 
     @Test

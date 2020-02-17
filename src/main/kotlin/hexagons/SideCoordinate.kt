@@ -9,10 +9,9 @@ interface SideCoordinate {
     val n: CubeCoordinate
 }
 
-data class SideCoordinateInstance(override val m: CubeCoordinate, override val n: CubeCoordinate) : SideCoordinate{
-    override fun equals(other: Any?)
-            = (other is SideCoordinate)
-            && setOf(m,n) == setOf(other.m, other.n)
+data class SideCoordinateInstance(override val m: CubeCoordinate, override val n: CubeCoordinate) : SideCoordinate {
+    override fun equals(other: Any?) = (other is SideCoordinate)
+            && setOf(m, n) == setOf(other.m, other.n)
 }
 
 fun fromCubeCoordinates(m: CubeCoordinate, n: CubeCoordinate): Option<SideCoordinate> =
@@ -39,7 +38,8 @@ fun coordinatesOf(a: SideCoordinate, b: SideCoordinate): List<CubeCoordinate> = 
 
 fun areConnected(a: SideCoordinate, b: SideCoordinate): Boolean = distinctCoordinatesOf(a, b).size == 3
 
-fun areCorner(a: SideCoordinate, b: SideCoordinate, c: SideCoordinate): Boolean = distinctCoordinatesOf(listOf(a,b,c)).count() == 3
+fun areCorner(a: SideCoordinate, b: SideCoordinate, c: SideCoordinate): Boolean =
+    distinctCoordinatesOf(listOf(a, b, c)).count() == 3
 
 fun sharedCubeCoordinateOf(a: SideCoordinate, b: SideCoordinate): Option<CubeCoordinate> =
-    (coordinatesOf(a, b) subtract distinctCoordinatesOf(a, b)).singleOrNone()
+    coordinatesOf(a, b).groupingBy { it }.eachCount().filterValues { it > 1 }.keys.singleOrNone()

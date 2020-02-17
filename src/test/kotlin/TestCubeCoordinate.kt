@@ -34,6 +34,13 @@ class TestCubeCoordinate {
     }
 
     @Test
+    fun `A hexagon has six neighbours`() {
+        val cubeCoordinate = fromAxial(0, 0)
+        val neighbors = neighboursOf(cubeCoordinate)
+        assertEquals(6, neighbors.count())
+    }
+
+    @Test
     fun `Multiplication by 0 should return 0`() {
         val cubeCoordinate = createCubeCoordinate(1, 2, -3)
         val multiplier = createCubeCoordinate(0, 0, 0)

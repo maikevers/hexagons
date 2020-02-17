@@ -39,5 +39,16 @@ fun fromSideCoordinates(a: SideCoordinate, b: SideCoordinate, c: SideCoordinate)
     }
 }
 
+fun fromSideCoordinates(a: SideCoordinate, b: SideCoordinate): Option<CornerCoordinate> {
+    val distinctCoordinates = distinctCoordinatesOf(listOf(a, b)).toList()
+    return (distinctCoordinates.count() == 3).maybe {
+        CornerCoordinateInstance(
+            distinctCoordinates[0],
+            distinctCoordinates[1],
+            distinctCoordinates[2]
+        )
+    }
+}
+
 fun toSides(cornerCoordinate: CornerCoordinate): Set<SideCoordinate> = fromCorner(cornerCoordinate)
 

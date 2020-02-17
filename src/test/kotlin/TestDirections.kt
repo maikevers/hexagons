@@ -1,4 +1,3 @@
-import arrow.core.getOrElse
 import hexagons.*
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
@@ -20,7 +19,7 @@ class TestDirections {
     fun `Twice opposite side direction should be starting direction`() : Collection<DynamicTest> =
         sideDirections().map {
             DynamicTest.dynamicTest("Converting $it to opposite direction and back should be $it") {
-                val twiceOpposite = toOpposite(toOpposite(it))
+                val twiceOpposite = oppositeOf(oppositeOf(it))
                 assertEquals(it, twiceOpposite)
             }
         }
@@ -29,7 +28,7 @@ class TestDirections {
     fun `Twice opposite corner direction should be starting direction`() : Collection<DynamicTest> =
         cornerDirections().map {
             DynamicTest.dynamicTest("Converting $it to opposite direction and back should be $it") {
-                val twiceOpposite = toOpposite(toOpposite(it))
+                val twiceOpposite = oppositeOf(oppositeOf(it))
                 assertEquals(it, twiceOpposite)
             }
         }
