@@ -1,6 +1,7 @@
 package hexagons
 
 import arrow.core.*
+import kotlin.math.absoluteValue
 
 private data class CubeCoordinateInstance(override val q: Int, override val r: Int, override val s: Int) :
     CubeCoordinate
@@ -33,18 +34,29 @@ fun multiply(a: CubeCoordinate, b: CubeCoordinate): CubeCoordinate =
 fun scale(cubeCoordinate: CubeCoordinate, factor: Int): CubeCoordinate =
     CubeCoordinateInstance(cubeCoordinate.q * factor, cubeCoordinate.r * factor, cubeCoordinate.s * factor)
 
-fun toSideCoordinate(direction: Direction): SideCoordinate = SideCoordinate(0, 0)
+fun toSideCoordinate(cubeCoordinate: CubeCoordinate, direction: SideDirection): SideCoordinate =
+    SideCoordinate(cubeCoordinate, neighbor(cubeCoordinate, direction))
 
-fun fromDirection(direction: Direction): CubeCoordinate = when (direction) {
-    is NorthEast -> CubeCoordinateInstance(1, 0, -1)
-    is East -> CubeCoordinateInstance(1, -1, 0)
-    is SouthEast -> CubeCoordinateInstance(0, -1, 1)
-    is SouthWest -> CubeCoordinateInstance(-1, 0, 1)
-    is West -> CubeCoordinateInstance(-1, 1, 0)
-    is NorthWest -> CubeCoordinateInstance(0, 1, -1)
+fun fromSideDirection(direction: SideDirection): CubeCoordinate = when (direction) {
+    is SideDirection.NorthEast -> CubeCoordinateInstance(1, 0, -1)
+    is SideDirection.East -> CubeCoordinateInstance(1, -1, 0)
+    is SideDirection.SouthEast -> CubeCoordinateInstance(0, -1, 1)
+    is SideDirection.SouthWest -> CubeCoordinateInstance(-1, 0, 1)
+    is SideDirection.West -> CubeCoordinateInstance(-1, 1, 0)
+    is SideDirection.NorthWest -> CubeCoordinateInstance(0, 1, -1)
 }
 
-fun move(cubeCoordinate: CubeCoordinate, direction: Direction, steps: Int): CubeCoordinate =
-    multiply(cubeCoordinate, scale(fromDirection(direction), steps))
+fun allDirections(): Map<SideDirection, CubeCoordinate> = sideDirections().associateBy({ it }, { fromSideDirection(it) })
 
-fun neighbor(cubeCoordinate: CubeCoordinate, direction: Direction): CubeCoordinate = move(cubeCoordinate, direction, 1)
+fun areNeighbours(someCube: CubeCoordinate, otherCube: CubeCoordinate): Boolean =
+    distanceBetween(someCube, otherCube) == 1
+
+fun distanceBetween(a: CubeCoordinate, b: CubeCoordinate): Int = lengthOf(subtract(a, b))
+
+fun lengthOf(cubeCoordinate: CubeCoordinate): Int =
+    (cubeCoordinate.q.absoluteValue + cubeCoordinate.r.absoluteValue + cubeCoordinate.s.absoluteValue) / 2
+
+fun move(cubeCoordinate: CubeCoordinate, direction: SideDirection, steps: Int): CubeCoordinate =
+    add(cubeCoordinate, scale(fromSideDirection(direction), steps))
+
+fun neighbor(cubeCoordinate: CubeCoordinate, direction: SideDirection): CubeCoordinate = move(cubeCoordinate, direction, 1)

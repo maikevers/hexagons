@@ -1,5 +1,6 @@
 import arrow.core.None
 import arrow.core.Some
+import arrow.core.getOrElse
 import arrow.syntax.function.partially1
 import hexagons.*
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -47,9 +48,9 @@ class CubeCoordinateTests {
     @TestFactory
     fun `Moving in one direction and then in opposing direction should return to start coordinate`() : Collection<DynamicTest> =
         listOf(
-            NorthEast to SouthWest,
-            East to West,
-            SouthEast to NorthWest
+            SideDirection.NorthEast to SideDirection.SouthWest,
+            SideDirection.East to SideDirection.West,
+            SideDirection.SouthEast to SideDirection.NorthWest
         ).map {
             dynamicTest("Moving ${it.first} and then ${it.second} should return to start coordinate") {
                 val startCoordinate = createCubeCoordinate(0, 0)
@@ -58,4 +59,24 @@ class CubeCoordinateTests {
             }
         }
 
+    @TestFactory
+    fun `Neighbours should be neighbours`() : Collection<DynamicTest> =
+        sideDirections().map {
+            dynamicTest("Neighbour in direction $it should be neighbour") {
+                val startCubeCoordinate = fromAxial(0,0)
+                val neighbour = neighbor(startCubeCoordinate, it)
+                val areNeighbours = areNeighbours(startCubeCoordinate, neighbour)
+                assertTrue(areNeighbours)
+            }
+        }
+
+    @TestFactory
+    fun `Conversion of sideDirection to cube coordinate and back yields same sideDirection`() : Collection<DynamicTest> =
+        sideDirections().map {
+            dynamicTest("Converting $it to cube coordinate and back should yield $it") {
+                val convertedThereAndBack = fromCubeCoordinate(fromSideDirection(it))
+                assertTrue(convertedThereAndBack.isDefined())
+                assert(convertedThereAndBack.getOrElse { throw Exception() } == it)
+            }
+        }
 }

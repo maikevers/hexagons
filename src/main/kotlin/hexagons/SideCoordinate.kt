@@ -1,3 +1,4 @@
 package hexagons
 
-data class SideCoordinate(val m: Int, val n: Int)
+data class SideCoordinate(val m: CubeCoordinate, val n: CubeCoordinate)
+
