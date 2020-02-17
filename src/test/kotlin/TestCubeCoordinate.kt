@@ -1,6 +1,5 @@
 import arrow.core.None
 import arrow.core.Some
-import arrow.core.getOption
 import arrow.core.getOrElse
 import arrow.syntax.function.partially1
 import hexagons.*
