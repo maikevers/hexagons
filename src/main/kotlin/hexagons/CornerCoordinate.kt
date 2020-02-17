@@ -13,10 +13,9 @@ private data class CornerCoordinateInstance(
     override val a: CubeCoordinate,
     override val b: CubeCoordinate,
     override val c: CubeCoordinate
-) : CornerCoordinate{
-    override fun equals(other: Any?)
-            = (other is CornerCoordinate)
-            && setOf(a,b,c) == setOf(other.a, other.b, other.c)
+) : CornerCoordinate {
+    override fun equals(other: Any?) = (other is CornerCoordinate)
+            && setOf(a, b, c) == setOf(other.a, other.b, other.c)
 }
 
 fun fromCubeAndDirection(cubeCoordinate: CubeCoordinate, cornerDirection: CornerDirection): CornerCoordinate =
@@ -31,12 +30,14 @@ fun fromCubeCoordinates(a: CubeCoordinate, b: CubeCoordinate, c: CubeCoordinate)
 
 fun fromSideCoordinates(a: SideCoordinate, b: SideCoordinate, c: SideCoordinate): Option<CornerCoordinate> {
     val distinctCoordinates = distinctCoordinatesOf(listOf(a, b, c)).toList()
-    return (distinctCoordinates.count() != 3).maybe {
+    return (distinctCoordinates.count() == 3).maybe {
         CornerCoordinateInstance(
             distinctCoordinates[0],
             distinctCoordinates[1],
-            distinctCoordinates[3]
+            distinctCoordinates[2]
         )
     }
 }
+
+fun toSides(cornerCoordinate: CornerCoordinate): Set<SideCoordinate> = fromCorner(cornerCoordinate)
 

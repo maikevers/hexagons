@@ -47,6 +47,24 @@ sealed class CornerDirection {
     }
 }
 
+fun toOpposite(direction: SideDirection): SideDirection = when(direction){
+    is SideDirection.NorthEast -> SideDirection.SouthWest
+    is SideDirection.East -> SideDirection.West
+    is SideDirection.SouthEast -> SideDirection.NorthWest
+    is SideDirection.SouthWest -> SideDirection.NorthEast
+    is SideDirection.West -> SideDirection.East
+    is SideDirection.NorthWest -> SideDirection.SouthEast
+}
+
+fun toOpposite(direction: CornerDirection): CornerDirection = when(direction){
+    is CornerDirection.NorthEast -> CornerDirection.SouthWest
+    is CornerDirection.North -> CornerDirection.South
+    is CornerDirection.SouthEast -> CornerDirection.NorthWest
+    is CornerDirection.SouthWest -> CornerDirection.NorthEast
+    is CornerDirection.South -> CornerDirection.North
+    is CornerDirection.NorthWest -> CornerDirection.SouthEast
+}
+
 fun fromCubeCoordinates(cubeCoordinate: CubeCoordinate): Option<SideDirection> =
     allDirections().toList().singleOrNone { t -> t.second == cubeCoordinate }.map { t -> t.first }
 

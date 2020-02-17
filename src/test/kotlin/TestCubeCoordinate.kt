@@ -71,6 +71,22 @@ class TestCubeCoordinate {
         }
 
     @TestFactory
+    fun `Directions should yield expected cube coordinates`() : Collection<DynamicTest> =
+        listOf(
+            SideDirection.NorthEast to fromAxial(1,0),
+            SideDirection.East to fromAxial(1,-1),
+            SideDirection.SouthEast to fromAxial(0,-1),
+            SideDirection.SouthWest to fromAxial(-1,0),
+            SideDirection.West to fromAxial(-1,1),
+            SideDirection.NorthWest to fromAxial(0,1)
+        ).map {
+            dynamicTest("Direction ${it.first} should be ${it.second}") {
+                val cubeFromSideDirection = fromSideDirection(it.first)
+                assertEquals(it.second, cubeFromSideDirection)
+            }
+        }
+
+    @TestFactory
     fun `Conversion of sideDirection to cube coordinate and back yields same sideDirection`() : Collection<DynamicTest> =
         sideDirections().map {
             dynamicTest("Converting $it to cube coordinate and back should yield $it") {
