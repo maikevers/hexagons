@@ -1,2 +1,2 @@
-rootProject.name = "hexagonsv2"
+rootProject.name = "hexagons"
 
